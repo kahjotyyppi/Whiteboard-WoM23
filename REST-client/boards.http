@@ -1,0 +1,31 @@
+@apiUrl = http://localhost:3030/boards
+#@apiUrl = https://wom-exempel-lahepela.azurewebsites.net/notes
+@token = {{$dotenv TOKEN}}
+
+###
+GET {{apiUrl}}
+Authorization: Bearer {{token}}
+
+###
+POST {{apiUrl}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "boardName": "My 1st board"
+}
+
+### 
+PATCH {{apiUrl}}/650d60beba1ce6c5592c8fc9
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "My updated board name"
+}
+
+###
+DELETE {{apiUrl}}/650d60beba1ce6c5592c8fc9
+Authorization: Bearer {{token}}
+
+###

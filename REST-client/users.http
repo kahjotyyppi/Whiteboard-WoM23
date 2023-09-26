@@ -1,0 +1,44 @@
+@apiUrl = http://localhost:3030/users
+#@apiUrl = https://wom-exempel-lahepela.azurewebsites.net/users
+@token = {{$dotenv TOKEN}}
+
+###
+GET {{apiUrl}}
+Authorization: Bearer {{token}}
+
+###
+GET {{apiUrl}}/65006950434c5bdd0c52c95f
+Authorization: Bearer {{token}}
+
+### Logga in på /users/login
+POST {{apiUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "atte@gm",
+    "password": "123"
+}
+
+### skapa ny användare
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+    "email": "atte@gm",
+    "password": "123"
+}
+
+### 
+PATCH {{apiUrl}}/65006950434c5bdd0c52c95f
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "password": "Password123"
+}
+
+###
+DELETE {{apiUrl}}/65006950434c5bdd0c52c95f
+Authorization: Bearer {{token}}
+
+###
