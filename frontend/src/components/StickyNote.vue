@@ -2,12 +2,12 @@
 <template>
 <div>
     <div :style="noteStyle" class="sticky-note" @mousedown="startDrag">
+      <div class="buttons">
+      <button @click="changeColor('yellow')">Y</button>
+      <button @click="changeColor('pink')">P</button>
+      <button @click="changeColor('blue')">B</button>
+      <button @click="changeColor('green')">G</button>
       <button class="delete-button" @click="deleteNote">×</button>
-      <div class="color-buttons">
-      <button @click="changeColor('yellow')">Yellow</button>
-      <button @click="changeColor('pink')">Pink</button>
-      <button @click="changeColor('blue')">Blue</button>
-      <button @click="changeColor('green')">Green</button>
     </div>
         <div>
             <textarea :style="textareaStyle" @blur="saveText" @keyup.enter="saveText" ref="textInput" rows="4" cols="25" v-model="this.text"></textarea>
@@ -18,6 +18,7 @@
 
   
 <script>
+
 export default {
     props: {
         initialColor: String,
@@ -44,7 +45,8 @@ export default {
                 backgroundColor: this.backgroundColor,
                 width: '240px',
                 height: '240px',
-                padding: '20px',
+                paddingTop: '5px',
+                paddingRight: '5px',
                 border: 'none',
                 cursor: 'pointer',
                 position: 'absolute',
@@ -58,8 +60,11 @@ export default {
                 backgroundColor: this.backgroundColor,
                 border: 'none',
                 outline: 'none',
-                width: '200px',
-                height: '200px',
+                width: '220px',
+                height: '210px',
+                paddingTop: '20px',
+                paddingLeft: '15px',
+                paddingRight: '15px',
                 resize: 'none',
                 overflow: 'hidden', // Use auto for overflow to enable scrolling if needed
                 opacity: '0.8',
@@ -166,5 +171,9 @@ export default {
 
 .typed-text {
     white-space: pre-wrap;
+}
+
+.buttons {
+  text-align: right;
 }
 </style>

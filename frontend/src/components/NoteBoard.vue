@@ -1,11 +1,12 @@
 <template>
-<div v-for="note in this.notes.note" :key="note.id">
-    <StickyNote :initialText="note.content" :x="note.positionX" :y="note.positionY" :noteId="note.id" :initialColor="note.color" />
+<div v-if="loggedIn">
+    <div v-for="note in this.notes.note" :key="note.id">
+        <StickyNote :initialText="note.content" :x="note.positionX" :y="note.positionY" :noteId="note.id" :initialColor="note.color" />
+    </div>
 </div>
 </template>
 
 <script>
-
 import {
     mapState
 } from 'vuex';
@@ -16,6 +17,7 @@ export default {
     computed: {
         ...mapState(['storeSelectedBoardId']),
         ...mapState(['changeNotes']),
+        ...mapState(['loggedIn']),
     },
     data() {
         return {
@@ -26,10 +28,14 @@ export default {
         storeSelectedBoardId() {
             if (this.storeSelectedBoardId.length < 1)
                 return;
+            this.notes = [];
             this.fetchNotes();
         },
         changeNotes(value) {
-          if (value || !value) this.fetchNotes();
+            if (value || !value) this.fetchNotes();
+        },
+        loggedIn(value) {
+            if (!value) this.notes = [];
         }
     },
     methods: {
@@ -47,12 +53,13 @@ export default {
                 //console.log(resJson);
                 this.notes = resJson;
                 console.log(this.notes.note[0]);
-            }
-            catch (e) {
+            } catch (e) {
                 console.log(e);
             }
         },
     },
-    components: { StickyNote }
+    components: {
+        StickyNote
+    }
 }
 </script>

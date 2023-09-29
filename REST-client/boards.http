@@ -12,7 +12,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "boardName": "My 1st board"
+    "boardName": "My 2nd board"
 }
 
 ### 
