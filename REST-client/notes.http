@@ -12,10 +12,10 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "content": "My own note 2",
-    "positionX": 1,
-    "positionY": 1,
-    "boardId": "650d60beba1ce6c5592c8fc9"
+    "content": "My own note 1",
+    "positionX": 40,
+    "positionY": 40,
+    "boardId": "65106552d22fabbe68d6830e"
 }
 
 ### 
@@ -24,7 +24,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "content": "My updated note"
+    "content": "My updated note",
+    "positionX": 40,
+    "positionY": 40
 }
 
 ###

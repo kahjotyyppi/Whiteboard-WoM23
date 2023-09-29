@@ -2,8 +2,8 @@
 <div v-if="loggedIn">
     <div class="input-group">
         <div class="input-group-append">
-    <label class="input-group-text" for="inputGroupSelect02">Board:</label>
-  </div>
+            <label class="input-group-text" for="inputGroupSelect02">Board:</label>
+        </div>
         <select v-model="selectedBoardId" @change="loadNotes" class="custom-select" id="inputGroupSelect04">
             <option value="">Select a board</option>
             <option v-for="boards in userBoards.boards" :key="boards.id" :value="boards.id">{{ boards.name }}</option>
@@ -13,7 +13,6 @@
             <button v-if="selectedBoardId.length > 1" @click="newNote()" class="btn btn-primary" type="button">New Note</button>
         </div>
     </div>
-
 </div>
 </template>
 
@@ -29,8 +28,8 @@ export default {
     },
     // To get the boards immediately after logging in
     watch: {
-        loggedIn(value)  {
-            if(value) this.fetchUserBoards();
+        loggedIn(value) {
+            if (value) this.fetchUserBoards();
         }
     },
     data() {
@@ -70,14 +69,31 @@ export default {
             }
         },
         loadNotes() {
-            // When the user selects a board, you can handle it here
-            // Use this.selectedBoardId to identify the selected board
-            // Fetch and display notes for the selected board
+            this.$store.commit('changeSelectedBoardId', this.selectedBoardId);
         },
-        newNote() {
+        async newNote() {
             console.log("new note");
-
-            // Needs to emit the boardID to stickynote.vue with the command to create a new note
+            try {
+                const res = await fetch(`http://localhost:3030/notes/`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+                    },
+                    body: JSON.stringify({
+                        content: 'Click here to edit',
+                        color: 'Yellow',
+                        positionX: 500,
+                        positionY: 300,
+                        boardId: this.selectedBoardId,
+                    })
+                });
+                const resJson = await res.json();
+                this.notes = resJson;
+                this.$store.commit('changeNotes');
+            } catch (e) {
+                console.log(e);
+            }
         }
     },
 };

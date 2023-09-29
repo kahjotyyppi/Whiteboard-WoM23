@@ -30,6 +30,7 @@ router.post('/', async (req, res) => {
     const note = await prisma.notes.create({
         data: {
             content: req.body.content,
+            color: req.body.color,
             positionX: req.body.positionX,
             positionY: req.body.positionY,
             boardId: req.body.boardId
@@ -47,6 +48,9 @@ router.patch('/:id', async (req, res) => {
         },
         data: {
             content: req.body.content,
+            color: req.body.color,
+            positionX: req.body.positionX,
+            positionY: req.body.positionY,
             updatedAt: new Date()
         },
     })

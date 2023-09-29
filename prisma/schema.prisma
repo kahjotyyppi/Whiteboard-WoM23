@@ -10,6 +10,7 @@ datasource db {
 model notes {
   id        String      @id @default(auto()) @map("_id") @db.ObjectId
   content   String
+  color     String
   positionX Float
   positionY Float
   boardId   String
