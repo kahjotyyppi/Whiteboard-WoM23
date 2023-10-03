@@ -49,7 +49,7 @@ export default {
         async fetchUserBoards() {
             if (!localStorage.getItem('jwt_token')) return;
             try {
-                const res = await fetch("http://localhost:3030/boards/", {
+                const res = await fetch("https://lahepela-wom-project.azurewebsites.net/boards/", {
                     method: "GET",
                     headers: {
                         authorization: `Bearer ${localStorage.getItem('jwt_token')}`
@@ -74,7 +74,7 @@ export default {
         async newNote() {
             console.log("new note");
             try {
-                const res = await fetch(`http://localhost:3030/notes/`, {
+                const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/notes/`, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',

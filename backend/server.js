@@ -23,5 +23,5 @@ app.use('/notes', notesRouter)
 console.log("Server started!") 
 
 app.listen(PORT, () => {
-    console.log(`Server listening on http://localhost:${PORT}`)
+    console.log(`Server listening on https://lahepela-wom-project.azurewebsites.net:${PORT}`)
 })

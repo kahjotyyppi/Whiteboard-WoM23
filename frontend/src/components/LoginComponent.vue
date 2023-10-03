@@ -57,7 +57,7 @@ export default {
         },
         async login() {
             try {
-                const res = await fetch('http://localhost:3030/users/login', {
+                const res = await fetch('https://lahepela-wom-project.azurewebsites.net/users/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
