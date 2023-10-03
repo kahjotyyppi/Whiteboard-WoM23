@@ -10,8 +10,6 @@ app.use(express.json())
 const usersRouter = require('./routes/users.js')
 app.use('/users', usersRouter)
 
-//app.use('/public', express.static(__dirname + '/frontend/public'))
-
 // middleware-function
 app.use(auth)
 

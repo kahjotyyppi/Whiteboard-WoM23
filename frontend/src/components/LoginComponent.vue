@@ -1,16 +1,8 @@
 <template>
-<nav class="navbar navbar-expand-lg pt-5">
-    <div class="container-fluid">
-        <a class="navbar-brand"></a>
-
-        <div class="d-flex" v-if="loggedIn">
-        </div>
         <div v-if="loggedIn">
-            <h2>Logged in as {{account.name}}</h2>
             <b-button type="button" @click="logout()">Logout</b-button>
+            <h2>Logged in as {{account.name}}</h2>
         </div>
-    </div>
-</nav>
 
 <!-- Login modal -->
 <div class="container" v-if="!loggedIn">
@@ -144,5 +136,9 @@ h4,
 
 #regMsg {
     color: red;
+}
+
+h2 {
+    font-size: 20px;
 }
 </style>

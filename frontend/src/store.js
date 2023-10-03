@@ -5,6 +5,7 @@ const store = createStore({
     loggedIn: false,
     storeSelectedBoardId: '',
     changeNotes: false,
+    messages: [],
   },
   mutations: {
     toggleLoggedIn(state) {
@@ -19,8 +20,10 @@ const store = createStore({
     changeNotes(state) {
       state.changeNotes = !state.changeNotes;
       console.log("Change in notes!");
-    }
-    
+    },
+    addMessage(state, message) {
+      state.messages = message;
+    },
   },
 });
 

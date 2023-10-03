@@ -27,7 +27,8 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
 
-    const note = await prisma.notes.create({
+    try {
+           const note = await prisma.notes.create({
         data: {
             content: req.body.content,
             color: req.body.color,
@@ -37,12 +38,22 @@ router.post('/', async (req, res) => {
         },
     })
     console.log("note created:", note)
-    res.send({ msg: 'note created', id: note.id })
+    res.send({ msg: 'note created', id: note.id }) 
+    }
+    catch (err) {
+        console.log(err)
+        res.status(409).send({
+            msg: 'ERROR',
+            error: 'Failed to create note'
+        })
+    }
+
 })
 
 router.patch('/:id', async (req, res) => {
 
-    const note = await prisma.notes.update({
+    try {
+            const note = await prisma.notes.update({
         where: {
             id: req.params.id,
         },
@@ -59,12 +70,20 @@ router.patch('/:id', async (req, res) => {
         id: req.params.id,
         note: note
     })
+    }
+    catch (err) {
+        console.log(err)
+        res.status(404).send({
+            msg: 'ERROR',
+            error: 'Note note found'
+        })
+    }
+
 })
 
 router.delete('/:id', async (req, res) => {
 
     try {
-
         const note = await prisma.notes.delete({
             where: {
                 id: req.params.id,
@@ -78,7 +97,7 @@ router.delete('/:id', async (req, res) => {
     } catch (err) {
 
         console.log(err)
-        res.status(400).send({
+        res.status(404).send({
             msg: 'ERROR',
             error: 'Note not found'
         })

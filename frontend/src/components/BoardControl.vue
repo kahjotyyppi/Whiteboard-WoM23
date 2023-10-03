@@ -38,10 +38,10 @@ export default {
             userBoards: [],
         };
     },
-    created() {
-        this.fetchUserBoards();
-    },
     methods: {
+        sendMessageToNoteBoard(message) {
+            this.$store.commit('addMessage', message);
+        },
         logout() {
             this.$store.commit('toggleLoggedIn');
             localStorage.removeItem('jwt_token');
@@ -82,20 +82,29 @@ export default {
                     },
                     body: JSON.stringify({
                         content: 'Click here to edit',
-                        color: 'Yellow',
-                        positionX: 500,
-                        positionY: 300,
+                        color: '#f7ff8a',
+                        positionX: 750,
+                        positionY: 250,
                         boardId: this.selectedBoardId,
                     })
                 });
                 const resJson = await res.json();
                 this.notes = resJson;
                 this.$store.commit('changeNotes');
+
+                this.sendMessageToNoteBoard({
+                    type: 'createNote',
+                    noteId: this.notes.id,
+                    content: 'Click here to edit',
+                    color: '#f7ff8a',
+                    x: 750,
+                    y: 250,
+                });
             } catch (e) {
                 console.log(e);
             }
         }
-    },
+    }
 };
 </script>
 
@@ -116,5 +125,9 @@ li {
 
 a {
     color: #42b983;
+}
+
+.custom-select {
+    width: 200px;
 }
 </style>

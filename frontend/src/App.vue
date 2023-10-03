@@ -1,10 +1,17 @@
 <template>
-<div class="body">
-        <RegisterComponent />
-        <BoardControl />
-        <LoginComponent />
+<b-container class="bv-example-row">
+    <b-row>
+        <b-col></b-col>
+        <b-col>
+            <BoardControl />
+        </b-col>
+        <b-col>
+            <RegisterComponent />
+            <LoginComponent />
+        </b-col>
+    </b-row>
     <NoteBoard />
-</div>
+</b-container>
 </template>
 
 <script>

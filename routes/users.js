@@ -59,6 +59,7 @@ router.post('/login', async (req, res) => {
             sub: user.id,
             email: user.email,
             name: user.name,
+            ws_token: 'BfzZLrlghH',
             expiresIn: '1d'
         }, process.env.JWT_SECRET)
 
