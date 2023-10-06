@@ -1,7 +1,9 @@
 const WebSocket = require('ws');
 require('dotenv').config();
 const PORT = process.env.PORT || 5000;
-const wss = new WebSocket.Server({ port: PORT });
+const wss = new WebSocket.Server({
+    port: PORT
+});
 
 const boardClients = {};
 
@@ -27,7 +29,7 @@ wss.on('connection', (ws, req) => {
 
                     // Skicka inte till vår egen klient (ws)
                     if (clients === ws) return
-        
+
                     clients.send(JSON.stringify({
                         type: 'updatePosition',
                         noteId: message.noteId,
@@ -41,7 +43,7 @@ wss.on('connection', (ws, req) => {
                 boardClients[boardId].forEach(clients => {
 
                     if (clients === ws) return
-        
+
                     clients.send(JSON.stringify({
                         type: 'updateContent',
                         noteId: message.noteId,
@@ -54,7 +56,7 @@ wss.on('connection', (ws, req) => {
                 boardClients[boardId].forEach(clients => {
 
                     if (clients === ws) return
-        
+
                     clients.send(JSON.stringify({
                         type: 'updateColor',
                         noteId: message.noteId,
@@ -67,7 +69,7 @@ wss.on('connection', (ws, req) => {
                 boardClients[boardId].forEach(clients => {
 
                     if (clients === ws) return
-        
+
                     clients.send(JSON.stringify({
                         type: 'deleteNote',
                         noteId: message.noteId,
@@ -79,7 +81,7 @@ wss.on('connection', (ws, req) => {
                 boardClients[boardId].forEach(clients => {
 
                     if (clients === ws) return
-        
+
                     clients.send(JSON.stringify({
                         type: 'createNote',
                         noteId: message.noteId,
@@ -89,6 +91,23 @@ wss.on('connection', (ws, req) => {
                         y: message.y,
                     }));
                 })
+            };
+            if (message.type === "deletedBoard") {
+                for (const boardId in boardClients) {
+                    if (boardClients.hasOwnProperty(boardId)) {
+                        const clients = boardClients[boardId];
+
+                        clients.forEach(clients => {
+
+                            if (clients === ws) return
+
+                            clients.send(JSON.stringify({
+                                type: 'deletedBoard',
+                                boardId: message.boardId,
+                            }));
+                        })
+                    }
+                }
             };
         });
 

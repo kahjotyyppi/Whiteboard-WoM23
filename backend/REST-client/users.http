@@ -1,5 +1,5 @@
-#@apiUrl = http://localhost:3030/users
-@apiUrl = https://lahepela-wom-project.azurewebsites.net/users
+@apiUrl = http://localhost:3030/users
+#@apiUrl = https://lahepela-wom-project.azurewebsites.net/users
 @token = {{$dotenv TOKEN}}
 
 ###
@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ### 
-PATCH {{apiUrl}}/65006950434c5bdd0c52c95f
+PATCH {{apiUrl}}/6510526bd22fabbe68d6830c
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

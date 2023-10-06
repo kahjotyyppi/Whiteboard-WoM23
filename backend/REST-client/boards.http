@@ -1,5 +1,5 @@
 @apiUrl = http://localhost:3030/boards
-#@apiUrl = https://wom-exempel-lahepela.azurewebsites.net/notes
+#@apiUrl = https://wom-exempel-lahepela.azurewebsites.net/boards
 @token = {{$dotenv TOKEN}}
 
 ###
@@ -12,7 +12,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "boardName": "My 2nd board"
+    "boardName": "My 4th board"
 }
 
 ### 

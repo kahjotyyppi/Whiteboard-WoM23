@@ -44,6 +44,7 @@ export default {
             if (value.type == "updateContent") this.handleContentUpdate(value);
             if (value.type == "deletedNote") this.handleRemoveNote(value);
             if (value.type == "createNote") this.handleCreateNote(value);
+            if (value.type == "deletedBoard") this.handleDeleteBoard(value);
             console.log(value.type)
         }
     },
@@ -52,7 +53,8 @@ export default {
             if (!localStorage.getItem('jwt_token')) return;
             try {
                 const res = await fetch(
-                    `https://lahepela-wom-project.azurewebsites.net/notes/${this.storeSelectedBoardId}`, {
+                    //`https://lahepela-wom-project.azurewebsites.net/notes/${this.storeSelectedBoardId}`, {
+                    `http://localhost:3030/notes/${this.storeSelectedBoardId}`, {
                         method: 'GET',
                         headers: {
                             authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
@@ -69,7 +71,8 @@ export default {
         const WS_TOKEN = jwt.ws_token;
         console.log('webtoken ' + WS_TOKEN)
 
-        const WS_URL = `ws:lahepela-wom-websocket.azurewebsites.net?token=${jwt.ws_token}&boardId=${this.storeSelectedBoardId}`;
+        //const WS_URL = `wss:lahepela-wom-websocket.azurewebsites.net?token=${jwt.ws_token}&boardId=${this.storeSelectedBoardId}`;
+        const WS_URL = `ws:localhost:5000?token=${jwt.ws_token}&boardId=${this.storeSelectedBoardId}`;
 
         if(this.socket) this.socket.close();
         // Create a WebSocket connection
@@ -130,6 +133,15 @@ export default {
                 };
                 console.log(newNote);
                 this.notes.push(newNote);
+            }
+            if (message.type === 'deletedBoard') {
+                if (this.storeSelectedBoardId == message.boardId) {
+                    console.log("This board has got deleted");
+                    this.$store.commit('addMessage', message);
+                    this.$store.commit('changeSelectedBoardId', "");
+                    this.notes = "";
+                    this.socket.close();
+                }
             }
         });
 
@@ -196,6 +208,16 @@ export default {
                         color: noteData.color,
                         x: noteData.x,
                         y: noteData.y,
+                    })
+                );
+            }
+        },
+        handleDeleteBoard(data) {
+            if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+                this.socket.send(
+                    JSON.stringify({
+                        type: 'deletedBoard',
+                        boardId: data.boardId,
                     })
                 );
             }

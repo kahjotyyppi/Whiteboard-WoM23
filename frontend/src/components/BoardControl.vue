@@ -10,8 +10,45 @@
         </select>
         <div class="input-group-append">
             <!-- Only show the new note button if a board is selected. -->
-            <button v-if="selectedBoardId.length > 1" @click="newNote()" class="btn btn-primary" type="button">New Note</button>
+            <b-button class="btn btn-primary" v-b-modal.manage>Manage Boards</b-button>
+            <b-button v-if="selectedBoardId.length > 1" @click="newNote()" class="btn btn-primary" type="button">New Note</b-button>
         </div>
+    </div>
+</div>
+
+<!-- Manage boards modal -->
+
+<div class="container">
+    <div>
+        <b-modal hide-footer="true" id="manage" title="Board Management">
+            <!-- Your login message -->
+            <div v-if="this.warnMsg" class="alert alert-danger" role="alert">{{ this.warnMsg }}</div>
+            <div v-if="this.succMsg" class="alert alert-success" role="alert">{{ this.succMsg }}</div>
+
+            <div class="modal-content">
+                <div class="modal-body" style="padding: 40px 50px;">
+                    <h4>Your Boards</h4>
+                    <ul>
+                        <li v-for="board in userBoards.boards" :key="board.id">
+                            {{ board.name }}
+                            <button @click="deleteBoard(board.id)">Delete</button>
+                            <button @click="showAddCollaboratorInput(board.id)">Add Collaborator</button>
+                        </li>
+                    </ul>
+
+                    <div v-if="showCollaboratorInput">
+                        <input type="text" v-model="collaboratorEmail" placeholder="Enter email">
+                        <b-button @click="addCollaborator">Add</b-button>
+                    </div>
+
+                    <b-button @click="showCreateBoardInput = !showCreateBoardInput">Create New Board</b-button>
+                    <div v-if="showCreateBoardInput">
+                        <input type="text" v-model="newBoardName" placeholder="Enter board name">
+                        <b-button @click="createNewBoard">Create</b-button>
+                    </div>
+                </div>
+            </div>
+        </b-modal>
     </div>
 </div>
 </template>
@@ -25,17 +62,31 @@ export default {
     name: 'BoardControl',
     computed: {
         ...mapState(['loggedIn']),
+        ...mapState(['storeSelectedBoardId']),
+        ...mapState(['messages']),
     },
     // To get the boards immediately after logging in
     watch: {
         loggedIn(value) {
             if (value) this.fetchUserBoards();
-        }
+        },
+        messages(value) {
+            if (value.type == "deletedBoard") {
+                this.fetchUserBoards();
+            }
+        },
     },
     data() {
         return {
             selectedBoardId: '',
             userBoards: [],
+            showCollaboratorInput: false,
+            collaboratorEmail: "",
+            showCreateBoardInput: false,
+            newBoardName: "",
+            warnMsg: "",
+            succMsg: "",
+            selectedBoardCollab: "",
         };
     },
     methods: {
@@ -49,7 +100,8 @@ export default {
         async fetchUserBoards() {
             if (!localStorage.getItem('jwt_token')) return;
             try {
-                const res = await fetch("https://lahepela-wom-project.azurewebsites.net/boards/", {
+                //const res = await fetch("https://lahepela-wom-project.azurewebsites.net/boards/", {
+                const res = await fetch("http://localhost:3030/boards/", {
                     method: "GET",
                     headers: {
                         authorization: `Bearer ${localStorage.getItem('jwt_token')}`
@@ -74,7 +126,8 @@ export default {
         async newNote() {
             console.log("new note");
             try {
-                const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/notes/`, {
+                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/notes/`, {
+                const res = await fetch(`http://localhost:3030/notes/`, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',
@@ -102,6 +155,96 @@ export default {
                 });
             } catch (e) {
                 console.log(e);
+            }
+        },
+        async deleteBoard(boardId) {
+            if (this.storeSelectedBoardId === boardId) {
+                this.succMsg = "";
+                this.warnMsg = `Cannot delete the board that you currently are on.`;
+                return;
+            }
+            try {
+                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/boards/${this.boardId}`, {
+                const res = await fetch(`http://localhost:3030/boards/${boardId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
+                    },
+                });
+                const resJson = await res.json();
+                console.log(resJson);
+                if (resJson.msg !== "ERROR") {
+                    this.warnMsg = "";
+                    this.succMsg = `${resJson.msg} "${resJson.name}"`;
+                    console.log(this.storeSelectedBoardId)
+                    console.log(boardId)
+                    this.fetchUserBoards();
+
+                    // Send to websocket
+                    this.sendMessageToNoteBoard({
+                    type: 'deletedBoard',
+                    boardId: boardId,
+                });
+                } else {
+                    this.warnMsg = `${resJson.msg} ${resJson.error}`;
+                    this.succMsg = "";
+                }
+            } catch (e) {
+                this.succMsg = "";
+                this.warnMsg = e;
+            }
+        },
+        showAddCollaboratorInput(boardId) {
+            console.log(boardId)
+            // Implement logic to show the collaborator input for the selected board
+            this.showCollaboratorInput = true;
+            this.selectedBoardCollab = boardId;
+        },
+        async addCollaborator() {
+            console.log("new collaborator");
+            try {
+                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/boards`, {
+                const res = await fetch(`http://localhost:3030/boards/${this.selectedBoardCollab}`, {
+                    method: "PATCH",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+                    },
+                    body: JSON.stringify({
+                        username: this.collaboratorEmail,
+                    })
+                });
+                const resJson = await res.json();
+                this.warnMsg = "";
+                this.succMsg = `${resJson.msg} "${resJson.collaborator}".`;
+            } catch (e) {
+                console.log(e);
+                this.succMsg = "";
+                this.warnMsg = e;
+            }
+        },
+        async createNewBoard() {
+            console.log("new board");
+            try {
+                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/boards`, {
+                const res = await fetch(`http://localhost:3030/boards`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+                    },
+                    body: JSON.stringify({
+                        boardName: this.newBoardName,
+                    })
+                });
+                const resJson = await res.json();
+                this.warnMsg = "";
+                this.succMsg = `"${resJson.name}" ${resJson.msg}`;
+                this.fetchUserBoards();
+            } catch (e) {
+                console.log(e);
+                this.succMsg = "";
+                this.warnMsg = e;
             }
         }
     }

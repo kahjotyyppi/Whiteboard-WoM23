@@ -1,8 +1,8 @@
 <template>
-        <div v-if="loggedIn">
-            <b-button type="button" @click="logout()">Logout</b-button>
-            <h2>Logged in as {{account.name}}</h2>
-        </div>
+<div v-if="loggedIn">
+    <b-button type="button" @click="logout()">Logout</b-button>
+    <h2>Logged in as {{account.name}}</h2>
+</div>
 
 <!-- Login modal -->
 <div class="container" v-if="!loggedIn">
@@ -29,10 +29,33 @@
         </b-modal>
     </div>
 </div>
+
+<div class="container" v-if="loggedIn">
+    <!-- user settings modal -->
+    <b-button v-b-modal.userSettings>Settings</b-button>
+    <b-modal hide-footer="true" id="userSettings" title="User Settings">
+        <div v-if="this.settingsErrorMsg" class="alert alert-danger" role="alert">{{ this.settingsErrorMsg }}</div>
+        <div v-if="this.settingsOkMsg" class="alert alert-success" role="alert">{{ this.settingsOkMsg }}</div>
+        <div class="modal-content">
+            <div class="modal-body" style="padding: 40px 50px;">
+                <form role="form">
+                    <!-- New Password -->
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" class="form-control" id="newPassword" v-model="user.newPassword" placeholder="Enter new password" required>
+                    </div>
+                    <button @click="changePassword()" type="button" id="changePswdBtn" class="btn btn-primary btn-block">Change Password</button>
+                </form>
+            </div>
+        </div>
+    </b-modal>
+</div>
 </template>
 
 <script>
-import {mapState} from 'vuex';
+import {
+    mapState
+} from 'vuex';
 
 export default {
     name: 'LoginComponent',
@@ -48,6 +71,11 @@ export default {
             account: {
                 name: "",
             },
+            user: {
+                newPassword: "",
+            },
+            settingsErrorMsg: "",
+            settingsOkMsg: "",
             loginMsg: "",
         }
     },
@@ -57,7 +85,8 @@ export default {
         },
         async login() {
             try {
-                const res = await fetch('https://lahepela-wom-project.azurewebsites.net/users/login', {
+                //const res = await fetch('https://lahepela-wom-project.azurewebsites.net/users/login', {
+                const res = await fetch('http://localhost:3030/users/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -83,8 +112,33 @@ export default {
             }
 
         },
-        
-        
+        async changePassword() {
+            try {
+                const jwt = JSON.parse(atob(localStorage.getItem('jwt_token').split('.')[1]));
+                const res = await fetch(`http://localhost:3030/changePassword/${jwt.sub}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+                    },
+                    body: JSON.stringify({
+                        newPassword: this.user.newPassword,
+                        oldPassword: this.user.oldPassword,
+                    })
+                });
+                const resJson = await res.json();
+                console.log(resJson);
+                if (resJson.msg === "ERROR") {
+                    this.settingsErrorMsg = resJson.error;
+                    console.log(this.settingsErrorMsg);
+                } else {
+                    this.settingsErrorMsg = "";
+                    this.settingsOkMsg = resJson.msg;
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        },
         logout() {
             localStorage.removeItem('jwt_token');
             this.toggleLogin();
@@ -126,7 +180,8 @@ h4,
 }
 
 #loginBtn,
-#registerBtn {
+#registerBtn,
+#changePswdBtn {
     margin-top: 30px;
 }
 

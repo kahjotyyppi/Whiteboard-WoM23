@@ -19,6 +19,9 @@ app.use('/boards', boardsRouter)
 const notesRouter = require('./routes/notes.js')
 app.use('/notes', notesRouter)
 
+const changePasswordRouter = require('./routes/changePassword.js')
+app.use('/changePassword', changePasswordRouter)
+
 
 console.log("Server started!") 
 

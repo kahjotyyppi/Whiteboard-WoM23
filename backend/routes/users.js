@@ -1,12 +1,12 @@
-const express = require('express')
-const router = express.Router()
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const {
     PrismaClient
-} = require('@prisma/client')
-const prisma = new PrismaClient()
-require('dotenv').config()
+} = require('@prisma/client');
+const prisma = new PrismaClient();
+require('dotenv').config();
 
 
 // disable for production?
@@ -63,6 +63,20 @@ router.post('/login', async (req, res) => {
             expiresIn: '1d'
         }, process.env.JWT_SECRET)
 
+        const refreshToken = await jwt.sign({
+            sub: user.id,
+            email: user.email,
+            name: user.name,
+            ws_token: 'BfzZLrlghH',
+            expiresIn: '7d'
+        }, process.env.JWT_SECRET)
+
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict'
+        })
+
         res.send({
             token: token,
             msg: "Login successful",
@@ -116,38 +130,8 @@ router.post('/', async (req, res) => {
 
 )
 
+
 /*
-router.patch('/:id', async (req, res) => {
-
-    if (req.params.id != req.authUser.sub) {
-        res.status(403).send({
-            msg: 'ERROR',
-            error: 'Cannot patch other users'
-        })
-    }
-
-    const hash = null
-    if (req.body.password) {
-        hash = await bcrypt.hash(req.body.password, 12)
-    }
-
-    const user = await prisma.users.update({
-        where: {
-            id: req.params.id,
-        },
-        data: {
-            password: hash,
-            name: req.params.name,
-            updatedAt: new Date()
-        },
-    })
-    res.send({
-        msg: 'patch',
-        id: req.params.id,
-        user: user
-    })
-})
-
 router.delete('/:id', async (req, res) => {
 
     try {
