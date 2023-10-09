@@ -11,10 +11,9 @@ router.patch('/:id', async (req, res) => {
                 msg: 'ERROR',
                 error: 'Cannot patch other users'
             });
-            return; // Add return statement to exit the function
+            return;
         }
 
-        // Retrieve the user's current hashed password from your database
         const user = await prisma.users.findUnique({
             where: {
                 id: req.params.id,
@@ -26,7 +25,7 @@ router.patch('/:id', async (req, res) => {
                 msg: 'ERROR',
                 error: 'User not found'
             });
-            return; // Add return statement to exit the function
+            return;
         }
 
         // Check if the new password meets the minimum length requirement
@@ -35,7 +34,7 @@ router.patch('/:id', async (req, res) => {
                 msg: 'ERROR',
                 error: 'New password must be at least 5 characters long'
             });
-            return; // Add return statement to exit the function
+            return;
         }
 
         let hash = null;

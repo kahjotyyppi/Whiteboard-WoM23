@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
             })
         }
 
-        const token = await jwt.sign({
+        const token = jwt.sign({
             sub: user.id,
             email: user.email,
             name: user.name,
@@ -63,7 +63,9 @@ router.post('/login', async (req, res) => {
             expiresIn: '1d'
         }, process.env.JWT_SECRET)
 
-        const refreshToken = await jwt.sign({
+/*      Attempt at refreshTokens
+  
+            const refreshToken = jwt.sign({
             sub: user.id,
             email: user.email,
             name: user.name,
@@ -75,7 +77,7 @@ router.post('/login', async (req, res) => {
             httpOnly: true,
             secure: true,
             sameSite: 'strict'
-        })
+        })*/
 
         res.send({
             token: token,

@@ -100,8 +100,8 @@ export default {
         async fetchUserBoards() {
             if (!localStorage.getItem('jwt_token')) return;
             try {
-                //const res = await fetch("https://lahepela-wom-project.azurewebsites.net/boards/", {
-                const res = await fetch("http://localhost:3030/boards/", {
+                const res = await fetch("https://lahepela-wom-project.azurewebsites.net/boards/", {
+                //const res = await fetch("http://localhost:3030/boards/", {
                     method: "GET",
                     headers: {
                         authorization: `Bearer ${localStorage.getItem('jwt_token')}`
@@ -126,8 +126,8 @@ export default {
         async newNote() {
             console.log("new note");
             try {
-                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/notes/`, {
-                const res = await fetch(`http://localhost:3030/notes/`, {
+                const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/notes/`, {
+                //const res = await fetch(`http://localhost:3030/notes/`, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',
@@ -164,8 +164,8 @@ export default {
                 return;
             }
             try {
-                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/boards/${this.boardId}`, {
-                const res = await fetch(`http://localhost:3030/boards/${boardId}`, {
+                const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/boards/${this.boardId}`, {
+                //const res = await fetch(`http://localhost:3030/boards/${boardId}`, {
                     method: 'DELETE',
                     headers: {
                         authorization: `Bearer ${localStorage.getItem('jwt_token')}`,
@@ -203,8 +203,8 @@ export default {
         async addCollaborator() {
             console.log("new collaborator");
             try {
-                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/boards`, {
-                const res = await fetch(`http://localhost:3030/boards/${this.selectedBoardCollab}`, {
+                const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/boards/${this.selectedBoardCollab}`, {
+                //const res = await fetch(`http://localhost:3030/boards/${this.selectedBoardCollab}`, {
                     method: "PATCH",
                     headers: {
                         'Content-Type': 'application/json',
@@ -226,8 +226,8 @@ export default {
         async createNewBoard() {
             console.log("new board");
             try {
-                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/boards`, {
-                const res = await fetch(`http://localhost:3030/boards`, {
+                const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/boards`, {
+                //const res = await fetch(`http://localhost:3030/boards`, {
                     method: "POST",
                     headers: {
                         'Content-Type': 'application/json',

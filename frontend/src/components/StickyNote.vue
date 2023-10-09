@@ -165,8 +165,8 @@ export default {
         },
         async updateNote(color) {
             try {
-                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/notes/${this.noteId}`, {
-                const res = await fetch(`http://localhost:3030/notes/${this.noteId}`, {
+                const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/notes/${this.noteId}`, {
+                //const res = await fetch(`http://localhost:3030/notes/${this.noteId}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -197,8 +197,8 @@ export default {
         },
         async deleteNote() {
             try {
-                //const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/notes/${this.noteId}`, {
-                const res = await fetch(`http://localhost:3030/notes/${this.noteId}`, {
+                const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/notes/${this.noteId}`, {
+                //const res = await fetch(`http://localhost:3030/notes/${this.noteId}`, {
                     method: 'DELETE',
                     headers: {
                         authorization: `Bearer ${localStorage.getItem('jwt_token')}`,

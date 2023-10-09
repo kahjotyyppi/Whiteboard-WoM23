@@ -85,8 +85,8 @@ export default {
         },
         async login() {
             try {
-                //const res = await fetch('https://lahepela-wom-project.azurewebsites.net/users/login', {
-                const res = await fetch('http://localhost:3030/users/login', {
+                const res = await fetch('https://lahepela-wom-project.azurewebsites.net/users/login', {
+                //const res = await fetch('http://localhost:3030/users/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -115,7 +115,8 @@ export default {
         async changePassword() {
             try {
                 const jwt = JSON.parse(atob(localStorage.getItem('jwt_token').split('.')[1]));
-                const res = await fetch(`http://localhost:3030/changePassword/${jwt.sub}`, {
+                const res = await fetch(`https://lahepela-wom-project.azurewebsites.net/changePassword/${jwt.sub}`, {
+                //const res = await fetch(`http://localhost:3030/changePassword/${jwt.sub}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
