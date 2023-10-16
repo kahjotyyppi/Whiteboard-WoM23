@@ -7,7 +7,4 @@ A doodling board/whiteboard with the ability to create sticky notes. You can cre
 This project consists of 3 pieces, Frontend (Vue3), REST-Api server and Websocket server (NodeJS).
 
 ### Images
-![image](https://github.com/kahjotyyppi/wom-projekt/assets/4623879/85d7bf02-9595-461a-be9b-7a01280739d9)
-
-![image](https://github.com/kahjotyyppi/wom-projekt/assets/4623879/da7ce8bf-7975-4da5-8e8b-9a02eaec427b)
-
+![image](https://github.com/kahjotyyppi/Whiteboard-WoM23/assets/4623879/676be48f-4569-4eea-ac18-ca06a2b268fe)
